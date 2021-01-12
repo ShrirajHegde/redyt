@@ -21,11 +21,16 @@ However, this default subreddit can be changed by modifying the variable `defaul
 Here's an example of a custom `subreddit.txt`: http://0x0.st/-rbq.txt
 
 ***
-
+## Requirements
 Please note: you will need to install the following programs:
   - jq (JSON parsing)
-  - xdg-utils
   - ~~dmenu (User Input)~~
   - ~~sxiv (Image Viewing)~~
 
-`notify-send` is also recommended but, if not present, `echo` will be used as a notifier.
+### `notify-send` and `xdg-utils `are also _recommended_.
+
+***
+
+If `notify-send` not present, `echo` will be used as a notifier.
+
+If `xdg-utils` is absent, then find the downloaded images in "downloads" folder

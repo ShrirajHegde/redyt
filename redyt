@@ -63,8 +63,8 @@ wget -P "$cachedir" $imgs 2>/dev/null
 # Send a notification
 $notifier  "Redyt" "👍 Download Finished, Enjoy! 😊"
 
-# Once finished, remove all of the cached images 
-xdg-open $cachedir   2>/dev/null 
+# Once finished, open downloads folder (if xdg-utils is available)
+xdg-open $cachedir  2>/dev/null || echo "Check downloads folder"
 
 #Cleanup
 rm $cachedir/tmp.json 2>/dev/null 
