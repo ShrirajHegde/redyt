@@ -1,14 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 
 # Check if necessary programs are installed
-for prog in dmenu jq sxiv; do
+for prog in jq; do
 	[ ! "$(which "$prog")" ] && echo "Please install $prog!" && exit 1
 done
 # If notify-send is not installed, use echo as notifier
 [ ! "$(which notify-send)" ] && notifier="echo" || notifier="notify-send"
 
+SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 # Default config directory
-configdir="${XDG_CONFIG_HOME:-$HOME/.config}/redyt"
+configdir="$SCRIPTPATH/.config"
+
+if  [ $# -ne 0 ] && [[ $1 -eq "clean" ]] ; then
+	rm -rf $SCRIPTPATH/downloads/*
+	echo "Cleaning complete."
+	exit 0;
+fi
 
 # Create .config/redyt if it does not exist to prevent
 # the program from not functioning properly
@@ -25,10 +32,7 @@ defaultsub="linuxmemes"
 # If no argument is passed
 if [ -z "$1" ]; then
 	# Ask the user to enter a subreddit
-	subreddit=$(dmenu -p "Select Subreddit r/" -i -l 10 < "$configdir/subreddit.txt" | cut -d\| -f1 | awk '{$1=$1;print}')
-
-	# If no subreddit was chosen, exit
-	[ -z "$subreddit" ] && exit 1
+	subreddit=$defaultsub
 
 # Otherwise assign the first argument to the
 # subreddit variable
@@ -37,19 +41,19 @@ else
 fi
 
 # Default directory used to store the feed file and fetched images
-cachedir="/tmp/redyt"
-
-# If cachedir does not exist, create it
-if [ ! -d "$cachedir" ]; then
-	echo "$cachedir does not exist, creating..."
-	mkdir -p "$cachedir"
-fi
+cachedir="$SCRIPTPATH/downloads/$subreddit"
+rm "${cachedir:?}"/*  2>/dev/null 
+mkdir -p "$cachedir"
 
 # Limit the maximum number of requests to make
-limit=100
+limit=$2
+if [ -z "$2" ]; then
+	limit=20
+fi
+
 
 # Send a notification
-$notifier "Redyt" "📩 Downloading your 🖼️ Memes"
+$notifier "Redyt" "📩 Downloading your 🖼️ Images"
 
 # Download the subreddit feed, containing only the
 # first 100 entries (limit), and store it inside
@@ -63,13 +67,21 @@ imgs=$(jq '.' < "$cachedir/tmp.json" | grep url_overridden_by_dest | grep -Eo "h
 [ -z "$imgs" ] && $notifier "Redyt" "sadly, there are no images for subreddit $subreddit, please try again later!" && exit 1
 
 # Download images to $cachedir
-wget -P "$cachedir" $imgs
+printf "\n\nDownloading....		limit is $limit posts (both image and non-image posts)"
+
+wget -P "$cachedir" $imgs 2>/dev/null
 
 # Send a notification
 $notifier  "Redyt" "👍 Download Finished, Enjoy! 😊"
 
 # Display the images
-sxiv -a "$cachedir"/*.png "$cachedir"/*.jpg
+#sxiv -a "$cachedir"/*.png "$cachedir"/*.jpg
 
 # Once finished, remove all of the cached images
-rm "${cachedir:?}"/*
+#rm "${cachedir:?}"/* 
+xdg-open $cachedir   2>/dev/null 
+
+#Cleanup
+rm $cachedir/tmp.json 2>/dev/null 
+rm tmp.json 2>/dev/null 
+rm *.out 2>/dev/null  
