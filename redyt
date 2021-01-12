@@ -12,7 +12,7 @@ SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 configdir="$SCRIPTPATH/.config"
 
 if  [[ $# -ne 0 ]] && [[ $1 == "clean" ]] ; then
-	rm -rf $SCRIPTPATH/downloads/*
+	rm -rf $SCRIPTPATH/downloads/* 2>/dev/null 
 	echo "Cleaning complete."
 	exit 0;
 fi
