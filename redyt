@@ -43,8 +43,7 @@ if [ -z "$2" ]; then
 fi
 
 
-# Send a notification
-$notifier "Redyt" "📩 Downloading your 🖼️ Images"
+
 
 # Download the subreddit feed, containing only the
 # first 100 entries (limit), and store it inside
@@ -59,6 +58,10 @@ imgs=$(jq '.' < "$cachedir/tmp.json" | grep url_overridden_by_dest | grep -Eo "h
 
 # Download images to $cachedir
 printf "\n\nDownloading....		limit is $limit posts (both image and non-image posts)"
+
+# Send a notification
+$notifier "Redyt" "📩 Downloading your 🖼️ Images"
+
 
 wget -P "$cachedir" $imgs 2>/dev/null
 
