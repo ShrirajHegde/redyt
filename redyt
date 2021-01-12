@@ -10,24 +10,15 @@ done
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 # Default config directory
 configdir="$SCRIPTPATH/.config"
-printf $1
+
 if  [[ $# -ne 0 ]] && [[ $1 == "clean" ]] ; then
 	rm -rf $SCRIPTPATH/downloads/*
 	echo "Cleaning complete."
 	exit 0;
 fi
 
-# Create .config/redyt if it does not exist to prevent
-# the program from not functioning properly
-[ ! -d "$configdir" ] && echo "Directory $configdir does not exist, creating..." && mkdir -p "$configdir"
 
-# Default subreddit that will be inserted in "subreddit.txt"
-# if it does not exist
 defaultsub="linuxmemes"
-
-# If subbreddit.txt does not exist, create it to prevent
-# the program from not functioning properly
-[ ! -f "$configdir/subreddit.txt" ] && echo "$defaultsub" >> "$configdir/subreddit.txt"
 
 # If no argument is passed
 if [ -z "$1" ]; then

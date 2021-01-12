@@ -7,9 +7,7 @@
 
 ***
 
-Add your favourite subreddits to ```subreddit.txt```
-
-If the user does not modify this file, it will contain, by default, subreddit `linuxmemes`.
+If no arguement is passed, by default, subreddit `r/linuxmemes` will be chosen.
 However, this default subreddit can be changed by modifying the variable `defaultsub`.
 
 ## Usage:
