@@ -10,8 +10,8 @@ done
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 # Default config directory
 configdir="$SCRIPTPATH/.config"
-
-if  [ $# -ne 0 ] && [[ $1 -eq "clean" ]] ; then
+printf $1
+if  [[ $# -ne 0 ]] && [[ $1 == "clean" ]] ; then
 	rm -rf $SCRIPTPATH/downloads/*
 	echo "Cleaning complete."
 	exit 0;
